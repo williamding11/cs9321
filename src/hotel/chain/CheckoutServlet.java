@@ -54,13 +54,14 @@ public class CheckoutServlet extends HttpServlet {
 			//for each userbookingorder
 			//sum up number of each roomtype
 			
+			//TODO: Check for rooms based on which hotel they belong to
 			//for each roomtype:
 			for(RoomType rt:RoomType.values()){
 				int userBookingCount = 0;
 				int totalBookingCount = 0;
 				int totalRooms = 0;
 				//count user bookings for this roomtype
-				PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) as numRooms from bookingorderss where roomType = ? AND uid = ? ;");
+				PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) as numRooms from bookingorders where roomType = ? AND uid = ? ;");
 				ps.setString(1, rt.toString());
 				ps.setInt(2, u.getId());
 				ResultSet rs = ps.executeQuery();
@@ -68,12 +69,13 @@ public class CheckoutServlet extends HttpServlet {
 					userBookingCount = rs.getInt("numRooms");
 				}
 				//count all bookings for this roomtype
-				ps = conn.prepareStatement("SELECT COUNT(*) as numRooms from bookins where roomType = ?;");
+				ps = conn.prepareStatement("SELECT COUNT(*) as numRooms from bookings where roomType = ?;");
 				rs = ps.executeQuery();
 				if(rs.next()){
 					totalBookingCount = rs.getInt("numRooms");
 				}
 				//count number of rooms
+				
 				ps = conn.prepareStatement("SELECT COUNT(*) as numRooms from rooms where roomType = ?;");
 				rs = ps.executeQuery();
 				if(rs.next()){
@@ -85,27 +87,20 @@ public class CheckoutServlet extends HttpServlet {
 					break;
 				}
 			}
+			//Move from bookingorder to booking
 			if(bookingOpen){
-				for(RoomType rt:RoomType.values()){
-					
-				}
+				PreparedStatement ps = conn.prepareStatement("UPDATE bookingOrders SET bookingDate = CURDATE() where uid = ? ;");
+				ps.setInt(1, u.getId());
+				ps.executeUpdate();		
+				ps = conn.prepareStatement("Insert into bookings select * from bookingorders where uid = ?;");
+				ps.executeUpdate();
+				ps = conn.prepareStatement("delete from bookingorders where uid = ?;");
+				ps.executeUpdate();
+				DatabaseTool.endConnection(conn);
+				//return
 			}
-			//select COUNT(*) from bookings where this.start >= checkout AND this.end <= checkin AND roomtype = this.roomtype
-			//booked
-			
-			//select count(*) from rooms where roomtype = this.roomtype
-			//avail
-			//if bookingORder+booked <= avail
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO bookings(`checkin`,`checkout`,`uid`,`rid`,`extraBed`)VALUES(?,?,?,?,?);");
-			ps.setString(1, checkin);
-			ps.setString(2, checkout);
-			//Change this to current user based on session
-			ps.setInt(3, 1);
-			//Change this to selected room number
-			ps.setInt(4, 1);
-			ps.setBoolean(5, false);
-			ps.executeUpdate();
 			DatabaseTool.endConnection(conn);
+			//return
 		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

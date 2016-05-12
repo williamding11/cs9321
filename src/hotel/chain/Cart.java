@@ -22,7 +22,8 @@ public class Cart implements Serializable{
 		Date checkout = dateformat.parse(rs.getString("checkout"));
 		//Is this needed if session stores uid?
 		int uid = rs.getInt("uid");
-		int rid = rs.getInt("rid");
+		String roomType = rs.getString("roomType");
 		boolean extraBed = rs.getBoolean("extraBed");
+		Date bookingDate = dateformat.parse(rs.getString("bookingDate"));
 	}
 }
