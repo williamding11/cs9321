@@ -8,7 +8,16 @@ public class BookingBean implements Serializable{
 	private Date checkin;
 	private Date checkout;
 	private int userId;
-	private int roomId;
+	private String roomType;
+	private Date bookingDate;
+	
+	//Getters
+	public Date getBookingDate() {
+		return bookingDate;
+	}
+	public String getRoomType() {
+		return roomType;
+	}
 	private boolean extraBed;
 	
 	public int getBookingId() {
@@ -23,11 +32,15 @@ public class BookingBean implements Serializable{
 	public int getUserId() {
 		return userId;
 	}
-	public int getRoomId() {
-		return roomId;
-	}
 	public boolean isExtraBed() {
 		return extraBed;
+	}
+	//Setters
+	public void setBookingDate(Date bookingDate) {
+		this.bookingDate = bookingDate;
+	}
+	public void setRoomType(String roomType) {
+		this.roomType = roomType;
 	}
 	public void setBookingId(int bookingId) {
 		this.bookingId = bookingId;
@@ -40,9 +53,6 @@ public class BookingBean implements Serializable{
 	}
 	public void setUserId(int userId) {
 		this.userId = userId;
-	}
-	public void setRoomId(int roomId) {
-		this.roomId = roomId;
 	}
 	public void setExtraBed(boolean extraBed) {
 		this.extraBed = extraBed;

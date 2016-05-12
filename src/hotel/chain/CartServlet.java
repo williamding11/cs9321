@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
  * Servlet implementation class CartServlet
  */
 @WebServlet("/CartServlet")
+//Handles adding to cart and removing from cart
+//Also handles adding room and adding/removing beds
 public class CartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -48,42 +50,39 @@ public class CartServlet extends HttpServlet {
 		UserBean u = (UserBean) request.getSession().getAttribute("userBean");
 		
 		Connection conn = null;
-		//
-		//Confirm booking
+		//if(addbooking)
+		//Add Booking
 		try{
 			conn = DatabaseTool.getConnection();
-			PreparedStatement ps = conn.prepareStatement("Select * from bookingOrders where id =?;");
-			ps.setInt(1,u.getId() );			
-			ResultSet rs = ps.executeQuery();			
-			Vector<Cart> cart = new Vector<Cart>();
-			
-			if(rs!=null){
-				while(rs.next()){
-					Cart c = new Cart();
-					c.parseResultSet(rs);
-					cart.add(c);
-				}
-			}
-		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException | ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			conn = DatabaseTool.getConnection();
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO bookings(`checkin`,`checkout`,`uid`,`rid`,`extraBed`)VALUES(?,?,?,?,?);");
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO bookingorders(`checkin`,`checkout`,`uid`,`rroomType`,`extraBed`,'bookingDate')VALUES(?,?,?,?,?,NOW());");
 			ps.setString(1, checkin);
 			ps.setString(2, checkout);
 			//Change this to current user based on session
 			ps.setInt(3, 1);
-			//Change this to selected room number
-			ps.setInt(4, 1);
+			//Change this to selected roomType
+			ps.setString(4, "Single");
 			ps.setBoolean(5, false);
+			//bookingDate as NOW();
 			ps.executeUpdate();
 			DatabaseTool.endConnection(conn);
 		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//if(removebooking)
+		//Remove Booking
+		try{
+			conn = DatabaseTool.getConnection();
+			PreparedStatement ps = conn.prepareStatement("DELETE from bookingOrders where id =?;");
+			ps.setInt(1,u.getId() );	
+			ps.executeUpdate();		
+			DatabaseTool.endConnection(conn);
+		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
