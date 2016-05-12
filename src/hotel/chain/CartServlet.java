@@ -1,5 +1,6 @@
 package hotel.chain;
 
+import beans.BookingBean;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,12 +40,14 @@ public class CartServlet extends HttpServlet {
 		
 		String checkin = request.getParameter("checkin");	
 		String checkout = request.getParameter("checkout");	
+		ArrayList<BookingBean> userCart = new ArrayList<BookingBean>();
+		
 		Connection conn = null;
 		//
 		//Confirm booking
 		try {
 			conn = DatabaseTool.getConnection();
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO bookings(`checkin`,`checkout`,`uid`,`rid`,`extraRoom`)VALUES(?,?,?,?,?);");
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO bookings(`checkin`,`checkout`,`uid`,`rid`,`extraBed`)VALUES(?,?,?,?,?);");
 			ps.setString(1, checkin);
 			ps.setString(2, checkout);
 			//Change this to current user based on session
