@@ -51,10 +51,10 @@ public class CartServlet extends HttpServlet {
 		
 		Connection conn = null;
 		//if(addbooking)
-		//Add Booking
+		//Add Room		
 		try{
 			conn = DatabaseTool.getConnection();
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO bookingorders(`checkin`,`checkout`,`uid`,`rroomType`,`extraBed`,'bookingDate')VALUES(?,?,?,?,?,NOW());");
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO bookingorders(`checkin`,`checkout`,`uid`,`roomType`,`extraBed`,'bookingDate')VALUES(?,?,?,?,?,NOW());");
 			ps.setString(1, checkin);
 			ps.setString(2, checkout);
 			//Change this to current user based on session
@@ -69,11 +69,13 @@ public class CartServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//if(removebooking)
-		//Remove Booking
+		
+		//if edit
+		//Get bookingBean
 		try{
 			conn = DatabaseTool.getConnection();
-			PreparedStatement ps = conn.prepareStatement("DELETE from bookingOrders where id =?;");
+			PreparedStatement ps = conn.prepareStatement("UPDATE bookingOrders SET extraBed = !extraBed where id =?;");
+			//change this to bookingid
 			ps.setInt(1,u.getId() );	
 			ps.executeUpdate();		
 			DatabaseTool.endConnection(conn);
@@ -81,9 +83,10 @@ public class CartServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+		//if origin was search then return to search
+		//if origin was cart, then update and return to cart
 	}
 
 	/**
