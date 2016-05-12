@@ -37,15 +37,18 @@ public class CartServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		
 		String checkin = request.getParameter("checkin");	
-		String checkout = request.getParameter("checkout");
-	
+		String checkout = request.getParameter("checkout");	
 		Connection conn = null;
+		//
+		//Confirm booking
 		try {
 			conn = DatabaseTool.getConnection();
 			PreparedStatement ps = conn.prepareStatement("INSERT INTO bookings(`checkin`,`checkout`,`uid`,`rid`,`extraRoom`)VALUES(?,?,?,?,?);");
 			ps.setString(1, checkin);
 			ps.setString(2, checkout);
+			//Change this to current user based on session
 			ps.setInt(3, 1);
+			//Change this to selected room number
 			ps.setInt(4, 1);
 			ps.setBoolean(5, false);
 			ps.executeUpdate();
