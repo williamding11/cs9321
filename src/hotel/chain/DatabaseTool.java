@@ -10,9 +10,9 @@ public class DatabaseTool {
 	static String user = "cs9321";
 	static String password = "cs9321";
 	
-	public static Connection getConnection() throws SQLException{
+	public static Connection getConnection() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 		Connection conn = null;
-		Properties connectionProp = new Properties();
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		conn = DriverManager.getConnection(dbUrl, user, password);
 	    return conn;
 	}

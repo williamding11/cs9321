@@ -50,7 +50,7 @@ public class CartServlet extends HttpServlet {
 			ps.setBoolean(5, false);
 			ps.executeUpdate();
 			DatabaseTool.endConnection(conn);
-		} catch (SQLException e) {
+		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
