@@ -1,6 +1,8 @@
 package hotel.chain;
 
 import beans.BookingBean;
+import beans.UserBean;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
@@ -41,10 +43,20 @@ public class CartServlet extends HttpServlet {
 		String checkin = request.getParameter("checkin");	
 		String checkout = request.getParameter("checkout");	
 		ArrayList<BookingBean> userCart = new ArrayList<BookingBean>();
+		UserBean u = (UserBean) request.getSession().getAttribute("userBean");
 		
 		Connection conn = null;
 		//
 		//Confirm booking
+		try{
+			conn = DatabaseTool.getConnection();
+			PreparedStatement ps = conn.prepareStatement("Select * from bookingOrders where id =?;");
+			ps.setInt(1, );
+			
+		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		try {
 			conn = DatabaseTool.getConnection();
 			PreparedStatement ps = conn.prepareStatement("INSERT INTO bookings(`checkin`,`checkout`,`uid`,`rid`,`extraBed`)VALUES(?,?,?,?,?);");
