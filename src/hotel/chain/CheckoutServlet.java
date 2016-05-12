@@ -104,6 +104,7 @@ public class CheckoutServlet extends HttpServlet {
 		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			DatabaseTool.endConnection(conn);
 		}
 	}
 

@@ -46,7 +46,7 @@ public class CartServlet extends HttpServlet {
 		
 		String checkin = request.getParameter("checkin");	
 		String checkout = request.getParameter("checkout");	
-		ArrayList<BookingBean> userCart = new ArrayList<BookingBean>();
+		Vector<Cart> userCart = new Vector<Cart>();
 		UserBean u = (UserBean) request.getSession().getAttribute("userBean");
 		
 		Connection conn = null;
@@ -84,6 +84,24 @@ public class CartServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+		//if action is cart then display it
+		try{
+			conn = DatabaseTool.getConnection();
+			PreparedStatement ps = conn.prepareStatement("select * from bookingOrders where id =?;");
+			//change this to bookingid
+			ps.setInt(1,u.getId() );	
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				Cart c = new Cart();
+				c.parseResultSet(rs);
+				userCart.add(c);
+			}	
+			DatabaseTool.endConnection(conn);
+		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		//if origin was search then return to search
 		//if origin was cart, then update and return to cart
