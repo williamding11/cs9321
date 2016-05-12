@@ -7,11 +7,13 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -51,9 +53,18 @@ public class CartServlet extends HttpServlet {
 		try{
 			conn = DatabaseTool.getConnection();
 			PreparedStatement ps = conn.prepareStatement("Select * from bookingOrders where id =?;");
-			ps.setInt(1, );
+			ps.setInt(1,u.getId() );			
+			ResultSet rs = ps.executeQuery();			
+			Vector<Cart> cart = new Vector<Cart>();
 			
-		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			if(rs!=null){
+				while(rs.next()){
+					Cart c = new Cart();
+					c.parseResultSet(rs);
+					cart.add(c);
+				}
+			}
+		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException | ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
